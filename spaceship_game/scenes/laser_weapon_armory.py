@@ -4,28 +4,23 @@ from spaceship_game.scenes import cypher_module
 from spaceship_game.scenes.scene import Scene
 
 
+def ask_for_password():
+    return input("... ")
+
+
+def guess_is_wrong(guess, password_encoded):
+    return cypher_module.encode(guess) != password_encoded
+
+
 class LaserWeaponArmory(Scene):
-    def __init__(self):
-        super().__init__()
-        self.armory_locked = "Locked"
-
-    def enter(self):
-        print("This is the Laser Weapon Armory.")
-        if self.armory_locked == "Locked":
-            return self.open_lock()
-        else:
-            return 'go_anywhere'
-
-    def open_lock(self):
-        print(dedent("""
+    ROUND_1_INTRO_TEXT = dedent("""
                             The armory is locked behind a password.
                             There is a password reminder sticked on the door.
                                 'Someone who is attracted to the homeless is a hobosexual.
                                 Someone who is attracted to the mexixans is a...'
-                            """))
+                            """)
 
-        if self.fail_to_unlock("kvwil ksrov"):
-            print(dedent(f"""
+    ROUND_2_INTRO_TEXT = dedent(f"""
                             Your password appears to be incorrect.
                             You have another chance but the air is running out of the room.
                             Luckily you found another password reminder sticker.
@@ -33,20 +28,39 @@ class LaserWeaponArmory(Scene):
 
                             kvwil ksrov
 
-                            Might be some sort of code."""))
+                            Might be some sort of code.""")
+
+    def __init__(self):
+        super().__init__()
+        self.locked = True
+
+    def enter(self):
+        print("This is the Laser Weapon Armory.")
+        while True:
+            if self.locked:
+                self.spring_trap()
+            else:
+                break
+
+    def spring_trap(self):
+        print(LaserWeaponArmory.ROUND_1_INTRO_TEXT)
+
+        guess = ask_for_password()
+        if guess_is_wrong(guess, "kvwil ksrov"):
+            print(LaserWeaponArmory.ROUND_2_INTRO_TEXT)
 
         else:
             print("You were right!")
-            self.armory_locked = "Unlocked"
-            return 'go_anywhere'
+            self.unlock()
+            return
 
-        if self.fail_to_unlock("ivwkz mwz"):
+        guess = ask_for_password()
+        if guess_is_wrong(guess, "ivwkz mwz"):
             print("It might be something else. How much air...")
-            return 'die'
+            raise Exception('death')
         else:
             print("You were right this time!")
-            self.armory_locked = "Unlocked"
-            return 'go_anywhere'
+            self.unlock()
 
-    def fail_to_unlock(self, password_encoded):
-        return cypher_module.encode(input("... ")) != password_encoded
+    def unlock(self):
+        self.locked = False

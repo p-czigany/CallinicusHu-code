@@ -19,12 +19,11 @@ class Engine(object):
     def play(self):
 
         while True:
-            where_to = self.next_scene.enter()
-            match where_to:
-                case 'go_anywhere':
-                    self.next_scene = self.scene_map.next_scene(self.move_freely())
-                case 'die':
-                    self.next_scene = self.scene_map.next_scene('death')
+            try:
+                self.next_scene.enter()
+                self.next_scene = self.scene_map.next_scene(self.move_freely())
+            except Exception as error:
+                self.next_scene = self.scene_map.next_scene(str(error))
 
     def move_freely(self):
         print(dedent("""Type the room's number into which you wish to go.
