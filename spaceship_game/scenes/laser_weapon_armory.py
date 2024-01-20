@@ -24,9 +24,7 @@ class LaserWeaponArmory(Scene):
                                 Someone who is attracted to the mexixans is a...'
                             """))
 
-        password = cypher_module.encode(input("... "))
-
-        if password != cypher_module.encode(cypher_module.decode("kvwil ksrov")):
+        if self.fail_to_unlock("kvwil ksrov"):
             print(dedent(f"""
                             Your password appears to be incorrect.
                             You have another chance but the air is running out of the room.
@@ -42,12 +40,13 @@ class LaserWeaponArmory(Scene):
             self.armory_locked = "Unlocked"
             return 'go_anywhere'
 
-        password = cypher_module.encode(input("... "))
-
-        if password != cypher_module.encode(cypher_module.decode("ivwkz mwz")):
+        if self.fail_to_unlock("ivwkz mwz"):
             print("It might be something else. How much air...")
             return 'die'
         else:
             print("You were right this time!")
             self.armory_locked = "Unlocked"
             return 'go_anywhere'
+
+    def fail_to_unlock(self, password_encoded):
+        return cypher_module.encode(input("... ")) != password_encoded
