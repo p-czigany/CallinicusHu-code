@@ -36,11 +36,8 @@ class LaserWeaponArmory(Scene):
 
     def enter(self):
         print("This is the Laser Weapon Armory.")
-        while True:
-            if self.locked:
-                self.spring_trap()
-            else:
-                break
+        if self.locked:
+            self.spring_trap()
 
     def spring_trap(self):
         print(LaserWeaponArmory.ROUND_1_INTRO_TEXT)
