@@ -13,22 +13,35 @@ def guess_is_wrong(guess, password_encoded):
 
 
 class LaserWeaponArmory(Scene):
-    ROUND_1_INTRO_TEXT = dedent("""
-                            The armory is locked behind a password.
-                            There is a password reminder sticked on the door.
-                                'Someone who is attracted to the homeless is a hobosexual.
-                                Someone who is attracted to the mexixans is a...'
-                            """)
+    ROUND_1_INTRO_TEXT = dedent(
+        """
+        The armory is locked behind a password.
+        There is a password reminder sticked on the door.
+            'Someone who is attracted to the homeless is a hobosexual.
+            Someone who is attracted to the mexixans is a...'
+        """
+    )
 
-    ROUND_2_INTRO_TEXT = dedent(f"""
-                            Your password appears to be incorrect.
-                            You have another chance but the air is running out of the room.
-                            Luckily you found another password reminder sticker.
-                            It says...
+    ROUND_1_PASSWORD_ENCODED = "kvwil ksrov"
 
-                            kvwil ksrov
+    ROUND_1_FAIL_TEXT = "Your password appears to be incorrect."
 
-                            Might be some sort of code.""")
+    ROUND_1_WIN_TEXT = "You were right!"
+
+    ROUND_2_INTRO_TEXT = dedent("""
+        You have another chance but the air is running out of the room.
+        Luckily you found another password reminder sticker.
+        It says...
+        
+        kvwil ksrov
+
+        Might be some sort of code.""")
+
+    ROUND_2_PASSWORD_ENCODED = "ivwkz mwz"
+
+    ROUND_2_FAIL_TEXT = "It might be something else. How much air..."
+
+    ROUND_2_WIN_TEXT = "You were right this time!"
 
     def __init__(self):
         super().__init__()
@@ -40,24 +53,29 @@ class LaserWeaponArmory(Scene):
             self.spring_trap()
 
     def spring_trap(self):
-        print(LaserWeaponArmory.ROUND_1_INTRO_TEXT)
 
+
+
+        print(LaserWeaponArmory.ROUND_1_INTRO_TEXT)
         guess = ask_for_password()
-        if guess_is_wrong(guess, "kvwil ksrov"):
-            print(LaserWeaponArmory.ROUND_2_INTRO_TEXT)
+        if guess_is_wrong(guess, LaserWeaponArmory.ROUND_1_PASSWORD_ENCODED):
+            print(LaserWeaponArmory.ROUND_1_FAIL_TEXT)
 
         else:
-            print("You were right!")
+            print(LaserWeaponArmory.ROUND_1_WIN_TEXT)
             self.unlock()
             return
 
+        print(LaserWeaponArmory.ROUND_2_INTRO_TEXT)
         guess = ask_for_password()
-        if guess_is_wrong(guess, "ivwkz mwz"):
-            print("It might be something else. How much air...")
-            raise Exception('death')
+        if guess_is_wrong(guess, LaserWeaponArmory.ROUND_2_PASSWORD_ENCODED):
+            print(LaserWeaponArmory.ROUND_2_FAIL_TEXT)
         else:
-            print("You were right this time!")
+            print(LaserWeaponArmory.ROUND_2_WIN_TEXT)
             self.unlock()
+            return
+
+        raise Exception('death')
 
     def unlock(self):
         self.locked = False
