@@ -34,16 +34,16 @@ class LaserWeaponArmory(Scene):
 
     def enter(self):
         print("This is the Laser Weapon Armory.")
-        # if self.locked:
-        self.spring_trap()
+        return self.spring_trap()
 
     def spring_trap(self):
         attempt_index = 0
         while self.locked:
             if attempt_index == MAX_ATTEMPTS:
-                raise Exception('death')
+                return 'death'
             self.try_to_unlock(attempt_index)
             attempt_index += 1
+        return 'go_anywhere'
 
     def try_to_unlock(self, attempt_index):
         print(INTRO_TEXTS[attempt_index])
